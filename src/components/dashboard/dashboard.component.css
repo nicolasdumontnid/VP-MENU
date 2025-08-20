@@ -91,6 +91,18 @@
   color: #777777;
 }
 
+.toggle-icon {
+  margin-left: 8px;
+  color: #cccccc;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  font-size: 12px;
+}
+
+.toggle-icon:hover {
+  color: #ffffff;
+}
+
 .chat-list {
   max-height: 60vh;
   overflow-y: auto;

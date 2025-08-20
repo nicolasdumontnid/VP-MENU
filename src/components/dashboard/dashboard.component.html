@@ -27,10 +27,16 @@
         class="search-input" 
         placeholder="My Presets"
         [(ngModel)]="presetFilter">
+      <i class="fas toggle-icon" 
+         [class.fa-chevron-down]="!presetsExpanded"
+         [class.fa-chevron-up]="presetsExpanded"
+         (click)="togglePresets()"></i>
     </div>
-    <div *ngFor="let preset of filteredPresets" class="list-item">
-      <span class="list-text">{{ preset.name }}</span>
-      <span class="list-count">{{ preset.count }}</span>
+    <div *ngIf="presetsExpanded">
+      <div *ngFor="let preset of filteredPresets" class="list-item">
+        <span class="list-text">{{ preset.name }}</span>
+        <span class="list-count">{{ preset.count }}</span>
+      </div>
     </div>
   </div>
 
@@ -46,39 +52,45 @@
         placeholder="Chat"
         [(ngModel)]="chatFilter"
         (input)="onChatFilterChange()">
+      <i class="fas toggle-icon" 
+         [class.fa-chevron-down]="!chatExpanded"
+         [class.fa-chevron-up]="chatExpanded"
+         (click)="toggleChat()"></i>
     </div>
     
-    <div class="chat-list scrollable">
-      <div *ngFor="let conversation of conversations$ | async" 
-           class="chat-item"
-           [class.chat-item-unread]="!conversation.isRead"
-           [class.chat-item-pinned]="conversation.isPinned"
-           (click)="openConversation(conversation)">
-        
-        <div class="chat-avatar">
-          <img [src]="conversation.otherParticipant?.photo" 
-               [alt]="conversation.otherParticipant?.firstName"
-               class="avatar-image">
-        </div>
-        
-        <div class="chat-content">
-          <div class="chat-header">
-            <div class="chat-name">
-              <i *ngIf="!conversation.isRead" class="fas fa-envelope unread-icon"></i>
-              <span [class.text-bold]="!conversation.isRead" [class.text-normal]="conversation.isRead">
-                {{ conversation.otherParticipant?.firstName }} {{ conversation.otherParticipant?.lastName }}
-              </span>
-            </div>
-            <div class="chat-date">
-              <i *ngIf="conversation.isPinned" class="fas fa-thumbtack pinned-icon"></i>
-              {{ formatDate(conversation.lastMessageDate) }}
-            </div>
+    <div *ngIf="chatExpanded">
+      <div class="chat-list scrollable">
+        <div *ngFor="let conversation of conversations$ | async" 
+             class="chat-item"
+             [class.chat-item-unread]="!conversation.isRead"
+             [class.chat-item-pinned]="conversation.isPinned"
+             (click)="openConversation(conversation)">
+          
+          <div class="chat-avatar">
+            <img [src]="conversation.otherParticipant?.photo" 
+                 [alt]="conversation.otherParticipant?.firstName"
+                 class="avatar-image">
           </div>
           
-          <div class="chat-details">
-            {{ conversation.patient?.firstName }} {{ conversation.patient?.lastName }} - 
-            {{ formatDate(conversation.exam?.examDate || '') }} - 
-            {{ truncateText(conversation.exam?.description || '', 60) }}
+          <div class="chat-content">
+            <div class="chat-header">
+              <div class="chat-name">
+                <i *ngIf="!conversation.isRead" class="fas fa-envelope unread-icon"></i>
+                <span [class.text-bold]="!conversation.isRead" [class.text-normal]="conversation.isRead">
+                  {{ conversation.otherParticipant?.firstName }} {{ conversation.otherParticipant?.lastName }}
+                </span>
+              </div>
+              <div class="chat-date">
+                <i *ngIf="conversation.isPinned" class="fas fa-thumbtack pinned-icon"></i>
+                {{ formatDate(conversation.lastMessageDate) }}
+              </div>
+            </div>
+            
+            <div class="chat-details">
+              {{ conversation.patient?.firstName }} {{ conversation.patient?.lastName }} - 
+              {{ formatDate(conversation.exam?.examDate || '') }} - 
+              {{ truncateText(conversation.exam?.description || '', 60) }}
+            </div>
           </div>
         </div>
       </div>

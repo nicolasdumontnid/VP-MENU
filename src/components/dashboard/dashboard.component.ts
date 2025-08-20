@@ -26,6 +26,8 @@ export class DashboardComponent implements OnInit {
   chatFilter = '';
   selectedConversation: any = null;
   currentUser$ = this.userService.getCurrentUser();
+  presetsExpanded = true;
+  chatExpanded = true;
 
   presets = [
     { name: 'Hospital Saint-Luc (UCLouvain)', count: 12 },
@@ -126,5 +128,13 @@ export class DashboardComponent implements OnInit {
 
   onChatFilterChange() {
     this.loadConversations();
+  }
+
+  togglePresets() {
+    this.presetsExpanded = !this.presetsExpanded;
+  }
+
+  toggleChat() {
+    this.chatExpanded = !this.chatExpanded;
   }
 }
