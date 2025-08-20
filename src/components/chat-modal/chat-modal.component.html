@@ -1,0 +1,85 @@
+<div class="modal-overlay" (click)="close()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    
+    <!-- Modal Header -->
+    <div class="modal-header">
+      <div class="header-info">
+        <div class="participant-info">
+          <img [src]="conversation.otherParticipant?.photo" 
+               [alt]="conversation.otherParticipant?.firstName"
+               class="participant-avatar">
+          <div class="participant-details">
+            <h3 class="participant-name">
+              {{ conversation.otherParticipant?.firstName }} {{ conversation.otherParticipant?.lastName }}
+            </h3>
+            <p class="patient-info">
+              {{ conversation.patient?.firstName }} {{ conversation.patient?.lastName }} - 
+              {{ formatDate(conversation.exam?.examDate) }}
+            </p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="header-actions">
+        <div class="menu-container">
+          <button class="menu-button" (click)="toggleMenu()">
+            <i class="fas fa-ellipsis-v"></i>
+          </button>
+          <div class="dropdown-menu" [class.show]="showMenu">
+            <button class="dropdown-item" (click)="markAsUnread()">
+              Mark as Unread
+            </button>
+          </div>
+        </div>
+        <button class="close-button" (click)="close()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Exam Description -->
+    <div class="exam-section">
+      <div class="exam-description">
+        <h4>{{ conversation.exam?.title }}</h4>
+        <p>{{ conversation.exam?.description }}</p>
+        <button class="view-exam-btn">
+          <i class="fas fa-eye"></i>
+          View Exam
+        </button>
+      </div>
+    </div>
+
+    <!-- Messages -->
+    <div class="messages-container scrollable">
+      <div *ngFor="let message of conversation.messages" 
+           class="message"
+           [class.message-sent]="message.senderId === 'U001'"
+           [class.message-received]="message.senderId !== 'U001'">
+        
+        <div class="message-bubble">
+          <div class="message-content">{{ message.content }}</div>
+          <div class="message-time">{{ formatMessageTime(message.timestamp) }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Message Input -->
+    <div class="message-input-container">
+      <div class="input-group">
+        <textarea 
+          id="messageInput"
+          class="message-input"
+          [(ngModel)]="newMessage"
+          (keydown)="onKeyPress($event)"
+          placeholder="Type your message..."
+          rows="2"></textarea>
+        <button 
+          class="send-button"
+          (click)="sendMessage()"
+          [disabled]="!newMessage.trim()">
+          <i class="fas fa-paper-plane"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

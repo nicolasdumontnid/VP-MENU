@@ -1,0 +1,94 @@
+<div class="dashboard-container">
+  <!-- Dashboard Header -->
+  <div class="dashboard-item">
+    <i class="fas fa-chart-bar dashboard-icon"></i>
+    <span class="dashboard-text">Dashboard</span>
+  </div>
+
+  <div class="separator"></div>
+
+  <!-- BOXES Section -->
+  <div class="section">
+    <div *ngFor="let box of boxes" class="list-item">
+      <i [class]="box.icon + ' list-icon'"></i>
+      <span class="list-text">{{ box.name }}</span>
+      <span class="list-count">{{ box.count }}</span>
+    </div>
+  </div>
+
+  <div class="separator"></div>
+
+  <!-- PRESETS Section -->
+  <div class="section">
+    <div class="search-container">
+      <i class="fas fa-search search-icon"></i>
+      <input 
+        type="text" 
+        class="search-input" 
+        placeholder="My Filters"
+        [(ngModel)]="presetFilter">
+    </div>
+    <div *ngFor="let preset of filteredPresets" class="list-item">
+      <span class="list-text">{{ preset.name }}</span>
+      <span class="list-count">{{ preset.count }}</span>
+    </div>
+  </div>
+
+  <div class="separator"></div>
+
+  <!-- CHAT Section -->
+  <div class="section">
+    <div class="search-container">
+      <i class="fas fa-comment search-icon"></i>
+      <input 
+        type="text" 
+        class="search-input" 
+        placeholder="Chat"
+        [(ngModel)]="chatFilter"
+        (input)="onChatFilterChange()">
+    </div>
+    
+    <div class="chat-list scrollable">
+      <div *ngFor="let conversation of conversations$ | async" 
+           class="chat-item"
+           [class.chat-item-unread]="!conversation.isRead"
+           [class.chat-item-pinned]="conversation.isPinned"
+           (click)="openConversation(conversation)">
+        
+        <div class="chat-avatar">
+          <img [src]="conversation.otherParticipant?.photo" 
+               [alt]="conversation.otherParticipant?.firstName"
+               class="avatar-image">
+        </div>
+        
+        <div class="chat-content">
+          <div class="chat-header">
+            <div class="chat-name">
+              <i *ngIf="!conversation.isRead" class="fas fa-envelope unread-icon"></i>
+              <span [class.text-bold]="!conversation.isRead" [class.text-normal]="conversation.isRead">
+                {{ conversation.otherParticipant?.firstName }} {{ conversation.otherParticipant?.lastName }}
+              </span>
+            </div>
+            <div class="chat-date">
+              <i *ngIf="conversation.isPinned" class="fas fa-thumbtack pinned-icon"></i>
+              {{ formatDate(conversation.lastMessageDate) }}
+            </div>
+          </div>
+          
+          <div class="chat-details">
+            {{ conversation.patient?.firstName }} {{ conversation.patient?.lastName }} - 
+            {{ formatDate(conversation.exam?.examDate || '') }} - 
+            {{ truncateText(conversation.exam?.description || '', 60) }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chat Modal -->
+  <app-chat-modal 
+    *ngIf="selectedConversation"
+    [conversation]="selectedConversation"
+    (closeModal)="closeModal()">
+  </app-chat-modal>
+</div>
