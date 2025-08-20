@@ -48,6 +48,17 @@ export class ChatModalComponent implements OnInit {
       this.conversationService.markAsUnread(this.conversation.id).subscribe(() => {
         this.conversation.isRead = false;
         this.showMenu = false;
+        this.close();
+      });
+    }
+  }
+
+  togglePin() {
+    if (this.conversation) {
+      const newPinnedStatus = !this.conversation.isPinned;
+      this.conversationService.update(this.conversation.id, { isPinned: newPinnedStatus }).subscribe(() => {
+        this.conversation.isPinned = newPinnedStatus;
+        this.showMenu = false;
       });
     }
   }

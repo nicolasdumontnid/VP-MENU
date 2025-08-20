@@ -29,6 +29,9 @@
             <button class="dropdown-item" (click)="markAsUnread()">
               Mark as Unread
             </button>
+            <button class="dropdown-item" (click)="togglePin()">
+              {{ conversation.isPinned ? 'Unpin' : 'Pin' }} Conversation
+            </button>
           </div>
         </div>
         <button class="close-button" (click)="close()">
